@@ -1,0 +1,24 @@
+    ---메일 통계---
+    <br>
+    전체 메일 : {{totalCount}}
+    <br>
+    안 읽은 메일 : {{unreadCount}}
+    <br>
+    사용중인 용량 : {{diskUsage}}
+    <br>
+    <br>
+    <br>
+    ---상위 5명---
+    <br>
+    {% for i in result_list %}
+    {{ i }} <br>
+    {% endfor %}
+    
+    <form action='require'>
+        <input style="display: none;" type="text" value={{id}} name='id'>
+        <input style="display: none;" type="text" value={{cookie}} name='cookie'>
+        <input style="display: none;" type="text" value={{mail_list}} name='mail_list'>
+
+        <input type="submit" name='submit' value='삭제하기'>
+    </form> 
+ 

@@ -1,0 +1,13 @@
+<form action="checked">
+
+    {% for i in mail_list %}
+    <div>
+        <input type='checkbox' value={{i.mailSN}} name='mailSN' checked>
+
+        {{i.subject}}
+    </div>
+    {% endfor %}
+    <input style="display: none;" type="text" value={{id}} name='id'>
+    <input style="display: none;" type="text" value={{cookie}} name='cookie'>
+    <input type="submit">
+</form>
