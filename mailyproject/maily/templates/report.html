@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <div class="header">
+        <img src="{% static 'images/header_logo.png' %}" alt="" class="logo">
+    </div>
+    <section>
+        <div class="resultText">
+            <h2>{{id}} <span>님의</span>
+                <br>메일 분석 결과
+            </h2>
+        </div>
+    </section>
+    <div class="result">
+        <div class="resultImg">
+            <img src="{% static 'images/coffee.png' %}" alt="" class="cupImg">
+            <h3><span>메일리</span> 님의 메일이 1달 동안 발생시키는 탄소로
+                <br><span>따듯한 커피 한잔</span>을 끊일 수 있어요.
+            </h3>
+        </div>
+    </div>
+    <div class="summary">
+        <h3>메일 통계 한눈에 보기</h3>
+        <hr>
+        <div class='summaryBindingBox'>
+            <ul class="summaryContents">
+                <li>전체 메일 수</li>
+                <li>안읽은 메일 수</li>
+                <li>총 용량</li>
+            </ul>
+            <ul class="summaryNumber">
+                <li>{{totalCount}}</li>
+                <li>{{unreadCount}}</li>
+                <li>{{diskUsage}}</li>
+            </ul>
+            <div>
+                <!-- div에 style을 %로 -->
+
+            </div>
+        </div>
+    </div>
+    <div class="most">
+        <h3>가장 많은 메일을 보낸 사람</h3>
+        <div class="mostContents">
+            {% for i in result_list %}
+            <h3>{{ i }}</h3>
+            {% endfor %}
+        </div>
+    </div>
+    <form action='delete'>
+        <input style="display: none;" type="text" value={{id}} name='id'>
+        <input style="display: none;" type="text" value={{cookie}} name='cookie'>
+
+        <input type="submit" name='submit' value='메일 삭제하러 가기' class="btnDelete">
+    </form>
+    <section>
+        <div class="bottomText">
+            <h3>ⓒ 2021. 메일그대와 all rights reserved.</h3>
+        </div>
+    </section>
+</body>
+
+</html>

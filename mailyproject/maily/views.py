@@ -10,7 +10,7 @@ from selenium.webdriver.common.keys import Keys
 from datetime import datetime
 import chromedriver_autoinstaller
 from collections import Counter
-
+import json
 
 # Create your views here.
 
@@ -19,7 +19,7 @@ def home(request):
     return render(request, 'home.html')
 
 
-def analysis(request):
+def report(request):
     id = request.GET['id']
     pw = request.GET['pw']
 
@@ -113,34 +113,28 @@ def analysis(request):
     result = sorted(result.items(), key=lambda x: x[1], reverse=True)
 
     result_list = []
-    if len(result) < 5:
+    if len(result) < 3:
         for i in range(len(result)):
             result_list.append(result[i][0])
     else:
-        for i in range(5):
+        for i in range(3):
             result_list.append(result[i][0])
-    return render(request, 'analysis.html', {'id': id, 'unreadCount': unreadCount, 'diskUsage': diskUsage, 'cookie': cookie, 'totalCount': totalCount, 'result_list': result_list})
+    return render(request, 'report.html', {'id': id, 'unreadCount': unreadCount, 'diskUsage': diskUsage, 'cookie': cookie, 'totalCount': totalCount, 'result_list': result_list})
 
 
-def require(request):
-    id = request.GET['id']
-    cookie = request.GET['cookie']
-
-    return render(request, 'require.html', {'id': id, 'cookie': cookie})
-
-
-def result(request):
+def delete(request):
     mail_list = []
     id = request.GET['id']
-    read = request.GET['isRead']
-    mark = request.GET['isMark']
+    # read = request.GET['isRead']
+    # mark = request.GET['isMark']
     cookie = request.GET['cookie']
-    to_date = request.GET['to_date']
-    from_date = request.GET['from_date']
+    # to_date = request.GET['to_date']
+    # from_date = request.GET['from_date']
+
 ##################[첫 페이지] #########################################
+
     headers = {
         'cookie': cookie
-
     }
     params = (
         ('page', '1'),
@@ -201,7 +195,6 @@ def result(request):
             )
             if len(mail_data_list) == 0:
                 break
-
 #########################################################################################
 
 ############################안읽은메일 요청해서 read:read 값을 read:unread로 치환###############
@@ -256,19 +249,19 @@ def result(request):
         if len(mail_data_list) == 0:
             break
 
-##########################################################################################
+###############################################################################
 
-    if read == "both" and mark == "both":
-        mail_list = mail_list
-    elif read == "both" and mark != "both":
-        mail_list = [x for x in mail_list
-                     if x["mark"] == mark]
-    elif read != "both" and mark == "both":
-        mail_list = [x for x in mail_list
-                     if x["read"] == read]
-    else:
-        mail_list = [x for x in mail_list
-                     if x["mark"] == mark and x["read"] == read]
+    # if read == "both" and mark == "both":
+    #     mail_list = mail_list
+    # elif read == "both" and mark != "both":
+    #     mail_list = [x for x in mail_list
+    #                  if x["mark"] == mark]
+    # elif read != "both" and mark == "both":
+    #     mail_list = [x for x in mail_list
+    #                  if x["read"] == read]
+    # else:
+    #     mail_list = [x for x in mail_list
+    #                  if x["mark"] == mark and x["read"] == read]
 
     # from_date = time.mktime(datetime.strptime(
     #     from_date, '%Y-%m-%d').timetuple())
@@ -277,36 +270,32 @@ def result(request):
     # mail_list = [x for x in mail_list
     #              if from_date < x["sentTime"] < to_date]
 
-    return render(request, 'result.html', {'read': read, 'mark': mark, 'mail_list': mail_list, 'id': id, 'cookie': cookie})
+    return render(request, 'delete.html', {'mail_list': json.dumps(mail_list), 'id': id, 'cookie': cookie})
 
 
-def delete(request):
-    return render(request, 'delete.html')
+# def checked(request):
+#     mailSN = request.GET.getlist('mailSN')
+#     cookie = request.GET['cookie']
+#     id = request.GET['id']
 
+#     # 휴지통으로 보내기 위해
+#     delete = ''
+#     for i in mailSN:
+#         delete = delete+i+';'
 
-def checked(request):
-    mailSN = request.GET.getlist('mailSN')
-    cookie = request.GET['cookie']
-    id = request.GET['id']
+#     # 휴지통으로 보내기
+#     headers = {
+#         'authority': 'mail.naver.com',
+#         'referer': 'https://mail.naver.com/',
+#         'cookie': cookie,
+#     }
 
-    # 휴지통으로 보내기 위해
-    delete = ''
-    for i in mailSN:
-        delete = delete+i+';'
+#     data = {
+#         'mailSNList': delete,
+#         'currentFolderType': 'etc',
+#         'u': id
+#     }
 
-    # 휴지통으로 보내기
-    headers = {
-        'authority': 'mail.naver.com',
-        'referer': 'https://mail.naver.com/',
-        'cookie': cookie,
-    }
-
-    data = {
-        'mailSNList': delete,
-        'currentFolderType': 'etc',
-        'u': id
-    }
-
-    requests.post(
-        'https://mail.naver.com/json/select/delete/', headers=headers, data=data)
-    return render(request, 'checked.html',  {'mailSN': mailSN, 'id': id, 'cookie': cookie})
+#     requests.post(
+#         'https://mail.naver.com/json/select/delete/', headers=headers, data=data)
+#     return render(request, 'delete.html',  {'mailSN': mailSN, 'id': id, 'cookie': cookie})

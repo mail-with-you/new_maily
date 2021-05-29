@@ -1,3 +1,117 @@
-<div>
-    그래서 이렇게 됐답니당 ㅎ_ㅎ
-</div> 
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>maily</title> 
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+</head>
+
+<body>
+    <div class="header">
+        <img src="{% static 'images/header_logo.png' %}" alt="" class="logo">
+    </div>
+    <section>
+        <div class="saveText">
+            <h2>123개의 <span>메일 삭제,</span>
+                <br>123.45kWh <span>절약</span>
+            </h2>
+        </div>
+    </section>
+    <div class="deleteText">
+        <h3>000개의 메일이 선택되었습니다. [메일 삭제하기] 버튼을 누르면 아래 선택한 메일이 삭제됩니다.</h3>
+    </div>
+    <form action='result'>
+    <span id="delete">
+        <a href="#"><input type="submit" value="메일 삭제하기" onclick="" class="btnDelete"></a>
+    </span>
+    <div>
+            <select name="isRead" id="isRead">
+                <option value="read" selected>읽은 메일</option>
+                <option value="unread">안읽은 메일</option>
+                <option value="both" >모두</option>
+            </select>
+            <select name="isMark" id="isMark">
+                <option value="mark" selected>중요한 메일만</option>
+                <option value="unmark">중요한 메일 제외</option>
+                <option value="both" >모두</option>
+            </select>
+            <input type="date" id="from_date" name="from_date">
+            <input type='date' id="to_date" name='to_date'>
+            <input type="submit" value='조회하기'>
+            <input style="display: none;" type="text" value={{id}} name='id'>
+            <input style="display: none;" type="text" value={{cookie}} name='cookie'>
+        </form>
+        <div id='mailName'></div>
+        <div id='mailSubject'></div>
+        <div id='mailSentTime'></div>
+        <div id='mailSize'></div>
+
+    </div>
+    <section>
+        <div class="bottomText">
+            <h3>ⓒ 2021. 메일그대와 all rights reserved.</h3>
+        </div>
+    </section>
+</body>
+<script type="text/javascript">
+    let obj = "{{mail_list}}";
+    let string = obj.replace(/&quot;/g, '"');
+    const mail_list = JSON.parse(string);
+    let showList = [...mail_list];
+    let filterStatus = {
+        read: 'both', // both, read, unread
+        mark: 'both', // both, mark, unmark
+        fromDate: new Date().getTime() / 1000,
+        toDate: new Date().getTime() / 1000,
+    }
+
+    const isRead = document.getElementById('isRead');
+    const isMark = document.getElementById('isMark');
+    const fromDate = document.getElementById('from_date');
+    const toDate = document.getElementById('to_date');
+    const updateShowList = () => {
+        let toReturn = [...mail_list];
+        if (filterStatus.read !== 'both') {
+            toReturn = toReturn.filter(mail => mail.read === filterStatus.read);
+        }
+        if (filterStatus.mark !== 'both') {
+            toReturn = toReturn.filter(mail => mail.mark === filterStatus.mark);
+        }
+            toReturn = toReturn.filter(mail => mail.sentTime > filterStatus.fromDate && mail.sentTime < filterStatus.toDate);
+        showList = toReturn
+    }
+
+    isRead.addEventListener('change', ({ target: { value } }) => {
+        filterStatus = { ...filterStatus, read: value }; 
+        updateShowList();
+    });
+    isMark.addEventListener('change', ({ target: { value } }) => {
+        filterStatus = { ...filterStatus, mark: value };
+        updateShowList();
+    });
+    fromDate.addEventListener('change', ({ target: { value } }) => {
+        filterStatus = { ...filterStatus, fromDate: new Date(value).getTime() / 1000};
+        updateShowList();
+    });
+    toDate.addEventListener('change', ({target: {value}}) => {
+        filterStatus = { ...filterStatus, toDate: new Date(value).getTime() / 1000};
+        updateShowList();
+    });
+    // showList.forEach(function(item){
+    //     document.getElementById('mailName').innerHTML=item.size;
+    //     })
+
+
+
+        document.getElementById('mailSubject').innerHTML=showList;
+    //     document.getElementById('mailSize').innerHTML=mailSize;
+    //     document.getElementById('mailSentTime').innerHTML=mailSentTime;
+
+
+</script>
+</html>
