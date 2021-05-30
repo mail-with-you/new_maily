@@ -1,256 +1,269 @@
-
 /*commom*/
 * {
-    margin: 0px;
-    padding: 0px;
-    background-color: #ffffff;
+  margin: 0px;
+  padding: 0px;
+  background-color: #ffffff;
 }
 body {
-    width: 375px;
-    height: auto;
-    margin: auto;
+  width: 375px;
+  height: auto;
+  margin: auto;
 }
 .header {
-    margin-top: 38.1px;
-    padding-left: 24px;
+  margin-top: 38.1px;
+  padding-left: 24px;
 }
 .logo {
   width: 119.2px;
   height: 38.85px;
 }
 .bottomText {
-    text-align: center;
-    padding-bottom: 40px;
-    font-size: 12px;
-    color: #dbdbdb;
+  text-align: center;
+  padding-bottom: 40px;
+  font-size: 12px;
+  color: #dbdbdb;
 }
-
 
 /*report, result  commom */
 
-
-
 .resultText {
-    margin-left: 24px;
-    margin-top: 7px;
-    margin-bottom: 10px;
+  margin-left: 24px;
+  margin-top: 7px;
+  margin-bottom: 10px;
 }
 .resultText h2 {
-    font-size: 28px;
-    font-weight: bold;
+  font-size: 28px;
+  font-weight: bold;
 }
 .resultText h2 span {
-    font-weight: normal;
+  font-weight: normal;
 }
 .result {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 }
 .resultImg {
-    text-align: center;
-    width: 327px;
-    height: 266px;
-    border-radius: 10px;
-    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.16);
-  }
+  text-align: center;
+  width: 327px;
+  height: 266px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.16);
+}
 
-/* report------------------------------------------------*/ 
+/* report------------------------------------------------*/
 
 .resultImg .cupImg {
-    width: 129px;
-    height: auto;
-    margin-top: 55.3px;
-    margin-bottom: 20px;
+  width: 129px;
+  height: auto;
+  margin-top: 55.3px;
+  margin-bottom: 20px;
 }
 .resultImg h3 {
-    font-size: 14px;
-    font-weight: normal;
+  font-size: 14px;
+  font-weight: normal;
 }
 .resultImg h3 span {
-    font-weight: bold;
+  font-weight: bold;
 }
-.summaryContents, .summaryNumber {
-    color: #191919;
+.summaryContents,
+.summaryNumber {
+  color: #191919;
 }
 .summary {
-    margin-top: 32px;
-    margin-left: 24px;   
+  margin-top: 32px;
+  margin-left: 24px;
 }
-.summaryBindingBox{
-    display: flex;
-    justify-content: space-around;
+.summaryBindingBox {
+  display: flex;
+  justify-content: space-around;
 }
 .summary h3 {
-    font-size: 16px;
+  font-size: 16px;
 }
 .summary ul {
-    display: inline-block;
+  display: inline-block;
 }
 .summary ul li {
-    list-style: none;
-    margin-bottom: 5px;
-    font-size: 14px;
+  list-style: none;
+  margin-bottom: 5px;
+  font-size: 14px;
 }
 .summary hr {
-    width: 327px;
-    border: solid 1px #ededed;
-    margin-top: 12px;
-    margin-bottom: 16px;
+  width: 327px;
+  border: solid 1px #ededed;
+  margin-top: 12px;
+  margin-bottom: 16px;
 }
 .summaryContents {
-    display: inline;
+  display: inline;
 }
 .summaryNumber {
-    margin-left: 16px;
+  margin-left: 16px;
 }
+
+.summary .summaryVisualize {
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.summaryVisualize p {
+  font-size: 12px;
+}
+
+.summaryBar {
+  height: 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
 .btnDelete {
-    margin-left: 24px;
-    border: 0px solid;
-    width: 327px;
-    height: 52px;
-    background-color: #29b5ff;
-    color: #ffffff;
-    font-size: 16px;
-    margin-bottom: 42px;
+  margin-left: 24px;
+  border: 0px solid;
+  width: 327px;
+  height: 52px;
+  background-color: #29b5ff;
+  color: #ffffff;
+  font-size: 16px;
+  margin-bottom: 42px;
 }
 .most {
-    margin-left: 24px;
+  margin-left: 24px;
 }
 
 .mostContents {
-    border: 0px solid #ffffff;
-    background-color: #f8f8f8;
-    width: 327px;
-    height: 60px;
+  border: 0px solid #ffffff;
+  background-color: #f8f8f8;
+  width: 327px;
+  height: 60px;
 }
 .mostContents h3 {
-    display: inline-block;
+  display: inline-block;
 }
-
 
 /* result ---------------------------------------------------*/
 .resultImg #outline {
-    background-image: url(passImg.png);
-    background-repeat: no-repeat;
-    background-size: cover;
-
+  background-image: url(passImg.png);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .resultImg h2 {
-    margin-top: 35px;
+  margin-top: 35px;
 }
 .resultImg .line {
-    margin-top: 2px;
-    border: 0.5px solid #ededed;
-    margin-left: 12px;
-    margin-right: 12px;
+  margin-top: 2px;
+  border: 0.5px solid #ededed;
+  margin-left: 12px;
+  margin-right: 12px;
 }
 .resultImg .userName {
-    margin-top: 15px;
-    text-align: end;
-    margin-right: 12px;
+  margin-top: 15px;
+  text-align: end;
+  margin-right: 12px;
 }
 .resultImg .certificationText {
-    margin-top: 10px;
-    height: 102.5px;
+  margin-top: 10px;
+  height: 102.5px;
 }
 .resultImg .certificationText .resultDate {
-    display: inline-block;
-    flex-flow: row;
+  display: inline-block;
+  flex-flow: row;
 }
 .resultImg .certificationText .logoImg {
-    flex-direction: column;
-    justify-content: flex-end; 
+  flex-direction: column;
+  justify-content: flex-end;
 }
 .resultImg .logoImg {
-    width: 48.45px;
+  width: 48.45px;
 }
 .resultText {
-    height: 102.5px;
+  height: 102.5px;
 }
 .resultImg .resultDate {
-
 }
 .reject {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 }
 
 .rejectMsg {
-    background-color: #f8f8fa;
-    align-items: center;
-    margin-top: 20.1px;
-    width: 327px;
-    height: 60px;
-    border: solid 0px;
-    display: flex;
-    justify-content: space-around;
+  background-color: #f8f8fa;
+  align-items: center;
+  margin-top: 20.1px;
+  width: 327px;
+  height: 60px;
+  border: solid 0px;
+  display: flex;
+  justify-content: space-around;
 }
 .rejectMsg h3 {
-    font-size: 12px;
-    text-align: center;
+  font-size: 12px;
+  text-align: center;
 }
 
 .rejectMsg h3 a {
-    color: #29b5ff;
+  color: #29b5ff;
 }
 
 .snsLogo {
-    margin-top: 45px;
-    display: flex;
-    justify-content: center;
+  margin-top: 45px;
+  display: flex;
+  justify-content: center;
 }
 .snsLogo a img {
-    width: 32.15px;
-    height: auto;
-    margin-right: 8px;
-    margin-left: 8px;
+  width: 32.15px;
+  height: auto;
+  margin-right: 8px;
+  margin-left: 8px;
 }
 
 .mailWithYou {
-    height: 72px;
-    text-align: center;
-    vertical-align: middle;
-    margin-top: 57.75px;
-    margin-bottom: 22.5px;
+  height: 72px;
+  text-align: center;
+  vertical-align: middle;
+  margin-top: 57.75px;
+  margin-bottom: 22.5px;
 }
 
 .mailWithYou h4 {
-    font-size: 12px;
-    color: #191919;
-    display: inline;
+  font-size: 12px;
+  color: #191919;
+  display: inline;
 }
 
-
-/* delete */ 
+/* delete */
 .saveText {
-    margin-left: 24px;
-    margin-top: 7px;
-    margin-bottom: 10px;
+  margin-left: 24px;
+  margin-top: 7px;
+  margin-bottom: 10px;
 }
 .saveText h2 {
-    font-size: 28px;
-    font-weight: bold;
+  font-size: 28px;
+  font-weight: bold;
 }
 .saveText h2 span {
-    font-weight: normal;
+  font-weight: normal;
 }
 .save {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-between;
 }
 
-
-
 .deleteText {
-    margin-top: 2px;
-    margin-left: 24px;
-    width: 327px;
+  margin-top: 2px;
+  margin-left: 24px;
+  width: 327px;
 }
 
 .deleteText h3 {
-    font-size: 12px;
-    font-weight: normal;
+  font-size: 12px;
+  font-weight: normal;
 }
 #delete .btnDelete {
-    margin-top: 12px;
+  margin-top: 12px;
+}
+#delete:hover .btnDelete {
+  cursor: pointer;
 }

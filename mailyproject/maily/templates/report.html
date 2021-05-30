@@ -35,7 +35,7 @@
         <div class='summaryBindingBox'>
             <ul class="summaryContents">
                 <li>전체 메일 수</li>
-                <li>안읽은 메일 수</li>
+                <li>안 읽은 메일 수</li>
                 <li>총 용량</li>
             </ul>
             <ul class="summaryNumber">
@@ -43,9 +43,13 @@
                 <li>{{unreadCount}}</li>
                 <li>{{diskUsage}}</li>
             </ul>
-            <div>
-                <!-- div에 style을 %로 -->
+            <div class="summaryVisualize">
+                <div class="summaryBar">
+                    <div class="verticalBar" style="background-color:#29b5ff; width:5px; height:{{unreadPersent}}%"></div>
+                    <div class="verticalBar" style="background-color:#ff5d50; width:5px; height:100%"></div>
 
+                </div>
+                <p>{{unreadPersent}}%의 안 읽은 메일 존재</p>
             </div>
         </div>
     </div>

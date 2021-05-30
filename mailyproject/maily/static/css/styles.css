@@ -100,6 +100,25 @@ body {
 .summaryNumber {
   margin-left: 16px;
 }
+
+.summary .summaryVisualize {
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.summaryVisualize p {
+  font-size: 12px;
+}
+
+.summaryBar {
+  height: 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
 .btnDelete {
   margin-left: 24px;
   border: 0px solid;
@@ -229,7 +248,7 @@ body {
 }
 .save {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .deleteText {
