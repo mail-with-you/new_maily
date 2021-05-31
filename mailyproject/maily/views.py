@@ -7,10 +7,12 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from datetime import datetime
 import chromedriver_autoinstaller
 from collections import Counter
 import json
+from django.contrib import messages
+import pandas as pd
+import numpy as np
 
 # Create your views here.
 
@@ -57,20 +59,20 @@ def report(request):
     # 로그인 버튼 누르기
     login_btn = driver.find_element_by_id('log.login')
     login_btn.click()
-    time.sleep(1)
+    time.sleep(2)
 
     target_url = driver.current_url
 
     if target_url == 'https://nid.naver.com/nidlogin.login':
-        errorMessage = '아이디와 비밀번호가 일치하지 않습니다.'
-        return render(request, 'home.html', {'errorMessage': errorMessage})
+        messages.success(request, "아이디와 비밀번호가 일치하지 않습니다.")
+        return redirect('login')
 
     else:
         # 메일 함 들어갔을 때 사용자의 쿠키 받아오기(cookie)
         cookies = driver.get_cookies()
         cookie = ''
-        for i in range(len(cookies)):
-            cookie = cookie+(cookies[i])['name']+'='+(cookies[i])['value']+';'
+        for i in cookies:
+            cookie = cookie+(i)['name']+'='+(i)['value']+';'
 
         headers = {
             'cookie': cookie
@@ -89,16 +91,53 @@ def report(request):
             'https://mail.naver.com/json/list/', headers=headers, params=params_mail)
         arr = response_mail.json()
         totalCount = arr['totalCount']  # 총 메일갯수
-        one_page_number = arr['listCount']  # 첫페이지 메일 갯수
-        page_number = int(int(totalCount)/int(one_page_number) + 1)  # 총 페이지 갯수
-        unreadCount = arr['unreadCount']
-        unreadPersent = round(totalCount/unreadCount, 2)
+        unreadCount = arr['unreadCount']  # 안 읽은 메일 갯수
+
+        # one_page_number = arr['listCount']  # 첫페이지 메일 갯수
+        # restrict_num=one_page_number*50
+        # page_number = arr['lastPage']  # 총 페이지 갯수
+
         # 용량에 관련된 요청
         response_capacity = requests.post(
             'https://mail.naver.com/json/option/trash/get/', headers=headers, data=params_data)
         diskUsage = (response_capacity.json())['diskUsage']  # 총 사용 용량
 
-        for i in range(1, page_number+1):
+    ##############################################################################
+        headers = {
+            'referer': 'https://mail.naver.com/',
+            'cookie': cookie
+        }
+
+        data = {
+            'listNum': '200',
+            'u': id
+        }
+
+        requests.post('https://mail.naver.com/json/option/list/set/',
+                      headers=headers, data=data)
+
+        headers = {
+            'cookie': cookie
+
+        }
+        params_mail = (
+            ('page', '1'),
+            ('u', id),
+        )
+
+        params_data = {
+            'u': id
+        }
+        mail_list_name = []
+        # 메일에 관련된 요청
+        response_mail = requests.post(
+            'https://mail.naver.com/json/list/', headers=headers, params=params_mail)
+        arr = response_mail.json()
+
+        # one_page_number = arr['listCount']  # 첫페이지 메일 갯수
+        # restrict_num=one_page_number*50
+
+        for i in range(1, 51):
             headers = {
                 'cookie': cookie
 
@@ -110,26 +149,36 @@ def report(request):
 
         # 메일에 관련된 요청
             response_mail = requests.post(
-                'https://mail.naver.com/json/list/', headers=headers, params=params_mail)
+                'https://mail.naver.com/json/list/', headers=headers, params=params_mail, timeout=500)
             arr = response_mail.json()
 
             mail_data_list = arr['mailData']
             # 제목, 보낸이, 크기, 시리얼넘버, 보낸 시간, read(default:read), mark(default:mark) 딕션너리 생성
             for i in mail_data_list:
-                mail_list_name.append((i['from'])['name'])
+                mail_list_name.append([i['from']['name'], i['size']])
 
         # result의 값은 보낸이를 내림차순으로 나타낸 리스트이다.
-        result = Counter(mail_list_name)
-        result = sorted(result.items(), key=lambda x: x[1], reverse=True)
+        # result = Counter(mail_list_name)
+        print_list = []
+        result = sorted(mail_list_name, key=lambda x: x[1], reverse=True)
+        g = pd.DataFrame(result)
+        g = g.groupby(g[0]).sum()
+        g = g.sort_values(by=1, ascending=False)
+        g = g.iloc[1:4]
+        g = g.reset_index()
 
-        result_list = []
-        if len(result) < 3:
-            for i in range(len(result)):
-                result_list.append(result[i][0])
-        else:
-            for i in range(3):
-                result_list.append(result[i][0])
-        return render(request, 'report.html', {'id': id, 'unreadCount': unreadCount, 'diskUsage': diskUsage, 'cookie': cookie, 'totalCount': totalCount, 'result_list': result_list, 'unreadPersent': unreadPersent})
+        k = np.array((g.iloc[0].tolist()))
+        # l = np.array((g.iloc[1].tolist()))
+        # m = np.array((g.iloc[2].tolist()))
+
+        first_name = k[0]
+        # first_capa = k[1]
+        # second_name = l[0]
+        # second_capa = l[1]
+        # third_name = m[0]
+        # third_capa = m[1]
+        unreadPersent = round(totalCount/unreadCount, 2)
+        return render(request, 'report.html', {'id': id, 'unreadCount': unreadCount, 'diskUsage': diskUsage, 'cookie': cookie, 'totalCount': totalCount, 'first_name': first_name, 'unreadPersent': unreadPersent})
 
 
 def delete(request):
@@ -152,12 +201,8 @@ def delete(request):
     )
 
     response_mail = requests.post(
-        'https://mail.naver.com/json/list/', headers=headers, params=params, timeout=250)
+        'https://mail.naver.com/json/list/', headers=headers, params=params, timeout=500)
     arr = response_mail.json()
-    totalCount = arr['totalCount']  # 총 메일갯수
-    one_page_number = arr['listCount']  # 첫페이지 메일 갯수
-    page_number = arr['lastPage']  # 총 페이지 갯수
-    unreadCount = arr['unreadCount']
 
     mail_data_list = arr['mailData']
     for i in mail_data_list:
@@ -176,7 +221,7 @@ def delete(request):
 ##############################################################################
 
 #####################[두번쨰부터 끝까지]##########################################
-    for i in range(2, 33):
+    for i in range(2, 51):
         headers = {
             'cookie': cookie
 
@@ -188,7 +233,7 @@ def delete(request):
 
     # 메일에 관련된 요청
         response_mail = requests.post(
-            'https://mail.naver.com/json/list/', headers=headers, params=params_mail, timeout=250)
+            'https://mail.naver.com/json/list/', headers=headers, params=params_mail, timeout=500)
         arr = response_mail.json()
         mail_data_list = arr['mailData']
         # 제목, 보낸이, 크기, 시리얼넘버, 보낸 시간, read(default:read), mark(default:mark) 딕션너리 생성
@@ -208,7 +253,7 @@ def delete(request):
 #########################################################################################
 
 ############################안읽은메일 요청해서 read:read 값을 read:unread로 치환###############
-    for i in range(1, 33):
+    for i in range(1, 51):
         headers = {
             'cookie': cookie
         }
@@ -219,11 +264,10 @@ def delete(request):
         )
 
         response_mail = requests.post(
-            'https://mail.naver.com/json/list/', headers=headers, params=params, timeout=250)
+            'https://mail.naver.com/json/list/', headers=headers, params=params, timeout=500)
         arr = response_mail.json()
 
         mail_data_list = arr['mailData']  # 보낸 사람
-
         a = []
         for i in mail_data_list:
             a.append(i['mailSN'])
@@ -236,7 +280,7 @@ def delete(request):
 ######################################################################################
 
 #########################중요메일 표시된메일만 요청해서 mark:unmark 값을 mark:mark 로 치환#######
-    for i in range(1, 33):
+    for i in range(1, 51):
         headers = {
             'cookie': cookie
         }
@@ -247,7 +291,7 @@ def delete(request):
         )
 
         response_mail = requests.post(
-            'https://mail.naver.com/json/list/', headers=headers, params=params, timeout=250)
+            'https://mail.naver.com/json/list/', headers=headers, params=params, timeout=500)
         arr = response_mail.json()
         mail_data_list = arr['mailData']  # 보낸 사람
         a = []
@@ -283,29 +327,29 @@ def delete(request):
     return render(request, 'delete.html', {'mail_list': json.dumps(mail_list), 'id': id, 'cookie': cookie})
 
 
-# def checked(request):
-#     mailSN = request.GET.getlist('mailSN')
-#     cookie = request.GET['cookie']
-#     id = request.GET['id']
+def result(request):
+    mailSN = request.GET.getlist('mailSN')
+    cookie = request.GET['cookie']
+    id = request.GET['id']
 
-#     # 휴지통으로 보내기 위해
-#     delete = ''
-#     for i in mailSN:
-#         delete = delete+i+';'
+    # # 휴지통으로 보내기 위해
+    # delete = ''
+    # for i in mailSN:
+    #     delete = delete+i+';'
 
-#     # 휴지통으로 보내기
-#     headers = {
-#         'authority': 'mail.naver.com',
-#         'referer': 'https://mail.naver.com/',
-#         'cookie': cookie,
-#     }
+    # # 휴지통으로 보내기
+    # headers = {
+    #     'authority': 'mail.naver.com',
+    #     'referer': 'https://mail.naver.com/',
+    #     'cookie': cookie,
+    # }
 
-#     data = {
-#         'mailSNList': delete,
-#         'currentFolderType': 'etc',
-#         'u': id
-#     }
+    # data = {
+    #     'mailSNList': delete,
+    #     'currentFolderType': 'etc',
+    #     'u': id
+    # }
 
-#     requests.post(
-#         'https://mail.naver.com/json/select/delete/', headers=headers, data=data)
-#     return render(request, 'delete.html',  {'mailSN': mailSN, 'id': id, 'cookie': cookie})
+    # requests.post(
+    #     'https://mail.naver.com/json/select/delete/', headers=headers, data=data)
+    return render(request, 'result.html',  {'mailSN': mailSN, 'id': id, 'cookie': cookie})

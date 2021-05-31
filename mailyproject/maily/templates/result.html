@@ -1,13 +1,67 @@
-<form action="checked">
+<!DOCTYPE html>
+<html lang="ko">
+{% load static %}
 
-    {% for i in mail_list %}
-    <div>
-        <input type='checkbox' value={{i.mailSN}} name='mailSN' checked>
-
-        {{i.subject}}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="header">
+        <img src="{% static 'images/header_logo.png' %}" alt="" class="logo">
+        </div>
+        <section>
+            <div class="resultText">
+                <h2>123개의 <span>메일 삭제,</span>
+                <br>123.45kWh <span>절약</span>
+                </h2>
+            </div>
+        </section>
+        
+        <div class="result">
+            
+            <div class="resultImg">
+            <div>
+               <h2>Certification</h2>
+               <div class="line"></div>
+               <h3 class="userName">성명 <span>{{id}}</span></h3>
+               <div class="certificationText">
+               <h3>위 사람은 maily에서 주관하는 
+               <br><span>Digital - Eco 탄소 절감 캠페인</span>에 참여하여
+               <br>탄소 중립 실현에 기여하였음을 인증합니다.
+               </h3>
+               <h3 class="resultDate">2021-05-20</h3>
+               <img src="{% static 'images/header_logo.png' %}" alt="" class="logoImg">
+            </div>
+               </div>
+            </div>
+        </div>
+    <div class="reject">
+        <div class="rejectMsg">
+            <h3>불필요한 메일의 구독을 취소하려면 <a href="https://mail.naver.com">수신거부</a>를 하세요. 메일이 
+            <br>  쌓이는 것을 방지할 수 있습니다. </h3>
+        </div>
     </div>
-    {% endfor %}
-    <input style="display: none;" type="text" value={{id}} name='id'>
-    <input style="display: none;" type="text" value={{cookie}} name='cookie'>
-    <input type="submit">
-</form>
+        <div class="snsLogo">
+            <a href="instagram.com"><img src="{% static 'images/facebook_image.png' %}" alt=""></a>
+            <a href="facebook.com"><img src="{% static 'images/instagram_image.png' %}" alt=""></a>
+            <a href="https://www.kakaocorp.com/kakao/introduce/kakaoCulture"><img src="{% static 'images/kakao_image.png' %}" alt=""></a>
+        </div>
+        <div class="mailWithYou">
+            <h4>만든 사람들
+                <br>-
+                <br>프로젝트 팀 메일 그대와(Mail with you)
+                <br>류창휘 이승연 최다인 최봉수 최유진 
+            </h4>
+        </div>
+        <section>
+        
+            <div class="bottomText">
+                <h3>ⓒ 2021. 메일그대와 all rights reserved.</h3>
+            </div>
+        </section>
+</body>
+</html>
