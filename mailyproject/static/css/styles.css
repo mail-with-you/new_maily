@@ -2,7 +2,6 @@
 * {
   margin: 0px;
   padding: 0px;
-  background-color: #ffffff;
 }
 body {
   width: 375px;
@@ -19,10 +18,111 @@ body {
 }
 .bottomText {
   text-align: center;
-  padding-bottom: 40px;
+  padding-bottom: 50px;
   font-size: 12px;
   color: #dbdbdb;
 }
+/* home */
+.home {
+  color: #191919;
+}
+
+header {
+  margin-left: 24px;
+  margin-top: 38.1px;
+}
+.arrowLogo {
+  position: fixed;
+  bottom: 70px;
+  right: 70px;
+}
+header h1 {
+  font-size: 36px;
+}
+
+header p {
+  font-size: 13.5px;
+  margin-top: 5px;
+}
+
+.landingText {
+  text-align: center;
+}
+
+.landingText h3 {
+  font-size: 18px;
+  margin-bottom: 25px;
+}
+.landingText p {
+  font-size: 12px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.carbonGraph {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.carbonGraph div {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+.carbonGraphIndex {
+  font-size: 12px;
+}
+.carbonGraphIndex div {
+  margin: 2px 1px;
+}
+
+.carbonGraphValue {
+  font-size: 12px;
+  color: #999999;
+}
+.carbonGraphValue div {
+  margin: 2px 1px;
+}
+.carbonGraphValue b {
+  color: #191919;
+}
+
+.graphBar {
+  height: 5px;
+  margin: 6.9px 10px;
+}
+
+.bg_blue {
+  background-color: #29b5ff;
+}
+
+.bg_red {
+  background-color: #ff5d50;
+}
+
+.bg_gray {
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f8fa;
+  padding: 30px;
+  padding-bottom: 0px;
+}
+
+.bg_gray p {
+  color: #dbdbdb;
+  font-size: 12px;
+}
+
+hr {
+  border: solid 1px #ededed;
+  margin: 50px 36px;
+}
+.bottomText {
+  margin-top: 100px;
+}
+
+/* ---------------------------------------------------------------- */
 
 /*report, result  commom */
 
@@ -100,25 +200,6 @@ body {
 .summaryNumber {
   margin-left: 16px;
 }
-
-.summary .summaryVisualize {
-  height: 80px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.summaryVisualize p {
-  font-size: 12px;
-}
-
-.summaryBar {
-  height: 50px;
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-end;
-}
-
 .btnDelete {
   margin-left: 24px;
   border: 0px solid;
@@ -266,4 +347,21 @@ body {
 }
 #delete:hover .btnDelete {
   cursor: pointer;
+}
+
+.summaryVisualize {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.summaryBar {
+  display: flex;
+  justify-content: space-around;
+  height: 100px;
+  align-items: flex-end;
+}
+
+.verticalBar {
+  width: 5px;
 }
