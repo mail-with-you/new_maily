@@ -28,7 +28,7 @@ def report(request):
     pw = request.GET['pw']
 
     options = webdriver.ChromeOptions()
-    options.add_argument('headless')
+    #options.add_argument('headless')
     options.add_argument("disable-gpu")
 
     path = chromedriver_autoinstaller.install()
@@ -44,14 +44,14 @@ def report(request):
     user_id = id
     user_pw = pw
     pyperclip.copy(user_id)
-    naver_id.send_keys(Keys.COMMAND, 'v')
+    naver_id.send_keys(Keys.CONTROL, 'v')
     driver.implicitly_wait(5)
 
     naver_pw = driver.find_element_by_name('pw')
     naver_pw.clear()
     naver_pw.click()
     pyperclip.copy(user_pw)
-    naver_pw.send_keys(Keys.COMMAND, 'v')
+    naver_pw.send_keys(Keys.CONTROL, 'v')
     driver.implicitly_wait(5)
 
     # 로그인 버튼 누르기
@@ -362,32 +362,32 @@ def confirm(request):
             i['sentTime']).strftime('%Y. %m. %d')
     mail_size = round(mail_size * 0.0000030517819446 *
                       0.447755118655106, 2)
-    return render(request, 'confirm.html', {'mail_size': mail_size, 'mail_list': mail_list, 'id': id})
-
+    return render(request, 'confirm.html', {'mail_size': mail_size, 'mail_list': mail_list, 'id': id, 'cookie': cookie})
 
 def result(request):
     mailSN = request.GET.getlist('mailSN')
     id = request.GET['id']
     mail_list_length = request.GET['mail_list_length']
     mail_size = request.GET['mail_size']
+    cookie = request.GET['cookie']
     # # 휴지통으로 보내기 위해
-    # delete = ''
-    # for i in mailSN:
-    #     delete = delete+i+';'
+    delete = ''
+    for i in mailSN:
+        delete = delete+i+';'
 
-    # # 휴지통으로 보내기
-    # headers = {
-    #     'authority': 'mail.naver.com',
-    #     'referer': 'https://mail.naver.com/',
-    #     'cookie': cookie,
-    # }
+    # 휴지통으로 보내기
+    headers = {
+        'authority': 'mail.naver.com',
+        'referer': 'https://mail.naver.com/',
+        'cookie': cookie,
+    }
 
-    # data = {
-    #     'mailSNList': delete,
-    #     'currentFolderType': 'etc',
-    #     'u': id
-    # }
+    data = {
+        'mailSNList': delete,
+        'currentFolderType': 'etc',
+        'u': id
+    }
 
-    # requests.post(
-    #     'https://mail.naver.com/json/select/delete/', headers=headers, data=data)
+    requests.post(
+        'https://mail.naver.com/json/select/delete/', headers=headers, data=data)
     return render(request, 'result.html',  {'mail_list_length': mail_list_length, 'mail_size': mail_size, 'mailSN': mailSN, 'id': id})
