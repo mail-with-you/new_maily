@@ -8,8 +8,6 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import chromedriver_autoinstaller
-from collections import Counter
-import json
 from django.contrib import messages
 import pandas as pd
 import numpy as np
@@ -93,10 +91,6 @@ def report(request):
         totalCount = arr['totalCount']  # 총 메일갯수
         unreadCount = arr['unreadCount']  # 안 읽은 메일 갯수
 
-        # one_page_number = arr['listCount']  # 첫페이지 메일 갯수
-        # restrict_num=one_page_number*50
-        # page_number = arr['lastPage']  # 총 페이지 갯수
-
         # 용량에 관련된 요청
         response_capacity = requests.post(
             'https://mail.naver.com/json/option/trash/get/', headers=headers, data=params_data)
@@ -136,7 +130,7 @@ def report(request):
 
         # one_page_number = arr['listCount']  # 첫페이지 메일 갯수
         # restrict_num=one_page_number*50
-
+        mail_size = 0
         for i in range(1, 51):
             headers = {
                 'cookie': cookie
@@ -156,10 +150,8 @@ def report(request):
             # 제목, 보낸이, 크기, 시리얼넘버, 보낸 시간, read(default:read), mark(default:mark) 딕션너리 생성
             for i in mail_data_list:
                 mail_list_name.append([i['from']['name'], i['size']])
-
+                mail_size += i['size']
         # result의 값은 보낸이를 내림차순으로 나타낸 리스트이다.
-        # result = Counter(mail_list_name)
-        print_list = []
         result = sorted(mail_list_name, key=lambda x: x[1], reverse=True)
         g = pd.DataFrame(result)
         g = g.groupby(g[0]).sum()
@@ -168,27 +160,64 @@ def report(request):
         g = g.reset_index()
 
         k = np.array((g.iloc[0].tolist()))
-        # l = np.array((g.iloc[1].tolist()))
-        # m = np.array((g.iloc[2].tolist()))
+        l = np.array((g.iloc[1].tolist()))
+        m = np.array((g.iloc[2].tolist()))
 
         first_name = k[0]
-        # first_capa = k[1]
-        # second_name = l[0]
-        # second_capa = l[1]
-        # third_name = m[0]
-        # third_capa = m[1]
-        unreadPersent = round(totalCount/unreadCount, 2)
-        return render(request, 'report.html', {'id': id, 'unreadCount': unreadCount, 'diskUsage': diskUsage, 'cookie': cookie, 'totalCount': totalCount, 'first_name': first_name, 'unreadPersent': unreadPersent})
+        first_capa = round(int(k[1]) / 1024, 2)
+        first_carbon = round((int(k[1]) / 1024) *
+                             0.0000030517819446 * 0.447755118655106, 4)
+        second_name = l[0]
+        second_capa = round(int(l[1]) / 1024, 2)
+        second_carbon = round((int(l[1]) / 1024) *
+                              0.0000030517819446 * 0.447755118655106, 4)
+        third_name = m[0]
+        third_capa = round(int(m[1]) / 1024, 2)
+        third_carbon = round((int(m[1]) / 1024) *
+                             0.0000030517819446 * 0.447755118655106, 4)
+        readCount = totalCount - unreadCount
+        unreadPersent = round(unreadCount/totalCount * 100, 2)
+
+        mail_size = round(mail_size * 0.0000030517819446 *
+                          0.447755118655106, 0)
+        mail_money = mail_size * 20
+        expression = ''
+        if mail_money < 3000:
+            expression = 'computer'
+        elif mail_money < 5000:
+            expression = 'coffee'
+        elif mail_money < 10000:
+            expression = 'mic'
+        elif mail_money < 20000:
+            expression = 'chicken'
+        elif mail_money < 50000:
+            expression = 'book'
+        elif mail_money < 100000:
+            expression = 'alchol'
+
+        return render(request, 'report.html', {'id': id, 'mail_size': mail_size, 'first_carbon': first_carbon, 'second_carbon': second_carbon, 'third_carbon': third_carbon, 'expression': expression, 'readCount': readCount, 'unreadPersent': unreadPersent, 'unreadCount': unreadCount, 'diskUsage': diskUsage, 'cookie': cookie, 'totalCount': totalCount, 'first_name': first_name, 'first_capa': first_capa, 'second_name': second_name, 'second_capa': second_capa, 'third_name': third_name, 'third_capa': third_capa})
 
 
 def delete(request):
-    mail_list = []
     id = request.GET['id']
-    # read = request.GET['isRead']
-    # mark = request.GET['isMark']
     cookie = request.GET['cookie']
-    # to_date = request.GET['to_date']
-    # from_date = request.GET['from_date']
+    totalCount = request.GET['totalCount']
+    mail_size = request.GET['mail_size']
+
+
+###############################################################################
+
+    return render(request, 'delete.html', {'mail_size': mail_size, 'id': id, 'cookie': cookie, 'totalCount': totalCount})
+
+
+def confirm(request):
+    mail_list = []
+    read = request.GET['isRead']
+    mark = request.GET['isMark']
+    to_date = request.GET['to_date']
+    from_date = request.GET['from_date']
+    cookie = request.GET['cookie']
+    id = request.GET['id']
 
 ##################[첫 페이지] #########################################
 
@@ -303,35 +332,44 @@ def delete(request):
         if len(mail_data_list) == 0:
             break
 
-###############################################################################
+    if read == "both" and mark == "both":
+        mail_list = mail_list
+    elif read == "both" and mark != "both":
+        mail_list = [x for x in mail_list
+                     if x["mark"] == mark]
+    elif read != "both" and mark == "both":
+        mail_list = [x for x in mail_list
+                     if x["read"] == read]
+    else:
+        mail_list = [x for x in mail_list
+                     if x["mark"] == mark and x["read"] == read]
 
-    # if read == "both" and mark == "both":
-    #     mail_list = mail_list
-    # elif read == "both" and mark != "both":
-    #     mail_list = [x for x in mail_list
-    #                  if x["mark"] == mark]
-    # elif read != "both" and mark == "both":
-    #     mail_list = [x for x in mail_list
-    #                  if x["read"] == read]
-    # else:
-    #     mail_list = [x for x in mail_list
-    #                  if x["mark"] == mark and x["read"] == read]
+    from_date = time.mktime(datetime.strptime(
+        from_date, '%Y-%m-%d').timetuple())
+    to_date = time.mktime(datetime.strptime(
+        to_date, '%Y-%m-%d').timetuple())
 
-    # from_date = time.mktime(datetime.strptime(
-    #     from_date, '%Y-%m-%d').timetuple())
-    # to_date = time.mktime(datetime.strptime(to_date, '%Y-%m-%d').timetuple())
+    mail_list = [x for x in mail_list
+                 if from_date < int(x["sentTime"]) < to_date]
 
-    # mail_list = [x for x in mail_list
-    #              if from_date < x["sentTime"] < to_date]
+    mail_size = 0
+    for m in mail_list:
+        mail_size = + m['size']
 
-    return render(request, 'delete.html', {'mail_list': json.dumps(mail_list), 'id': id, 'cookie': cookie})
+    for i in mail_list:
+        i['size'] = round(i['size'] / 1024, 2)
+        i['sentTime'] = datetime.utcfromtimestamp(
+            i['sentTime']).strftime('%Y. %m. %d')
+    mail_size = round(mail_size * 0.0000030517819446 *
+                      0.447755118655106, 2)
+    return render(request, 'confirm.html', {'mail_size': mail_size, 'mail_list': mail_list, 'id': id})
 
 
 def result(request):
     mailSN = request.GET.getlist('mailSN')
-    cookie = request.GET['cookie']
     id = request.GET['id']
-
+    mail_list_length = request.GET['mail_list_length']
+    mail_size = request.GET['mail_size']
     # # 휴지통으로 보내기 위해
     # delete = ''
     # for i in mailSN:
@@ -352,4 +390,4 @@ def result(request):
 
     # requests.post(
     #     'https://mail.naver.com/json/select/delete/', headers=headers, data=data)
-    return render(request, 'result.html',  {'mailSN': mailSN, 'id': id, 'cookie': cookie})
+    return render(request, 'result.html',  {'mail_list_length': mail_list_length, 'mail_size': mail_size, 'mailSN': mailSN, 'id': id})

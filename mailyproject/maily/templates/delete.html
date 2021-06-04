@@ -20,40 +20,39 @@
     </div>
     <section>
         <div class="saveText">
-            <h2>123개의 <span>메일 삭제,</span>
-                <br>123.45kWh <span>절약</span>
+            <h2>
+                {{totalCount}}개의 <span>메일 삭제하면,</span>
+                <br> 탄소 {{mail_size}}kg <span>절약 </span>
             </h2>
         </div>
     </section>
     <div class="deleteText">
-        <h3>000개의 메일이 선택되었습니다. [메일 삭제하기] 버튼을 누르면 아래 선택한 메일이 삭제됩니다.</h3>
+        <h3>[메일 삭제하기] 버튼을 누르면 아래 선택한 메일이 삭제됩니다.</h3>
     </div>
-    <form action='result'>
-    <span id="delete">
-        <a href="#"><input type="submit" value="메일 삭제하기" onclick="" class="btnDelete"></a>
-    </span>
-    <div>
-            <select name="isRead" id="isRead">
+        <form class='deleteSorting' action='confirm'>
+            <span id="delete">
+                <a href="#"><input type="submit" value="메일 삭제하기" onclick="" class="btnDelete"></a>
+            </span>
+            <div>
+            <select style='width: 150px' name="isRead" id="isRead">
                 <option value="read" selected>읽은 메일</option>
                 <option value="unread">안읽은 메일</option>
                 <option value="both" >모두</option>
             </select>
-            <select name="isMark" id="isMark">
+        </div>
+        <div>
+            <select style='width: 150px' name="isMark" id="isMark">
                 <option value="mark" selected>중요한 메일만</option>
                 <option value="unmark">중요한 메일 제외</option>
                 <option value="both" >모두</option>
             </select>
-            <input type="date" id="from_date" name="from_date">
-            <input type='date' id="to_date" name='to_date'>
-            <input type="submit" value='조회하기'>
+        </div>
+            <input style='width: 150px' type="date" value='1998-04-18' id="from_date" name="from_date"> ~
+            <input style='width: 150px' type='date' value='2021-05-02' id="to_date" name='to_date'>
             <input style="display: none;" type="text" value={{id}} name='id'>
             <input style="display: none;" type="text" value={{cookie}} name='cookie'>
+            <input style="display:none;" type="text" value={{mail_list}} name='mail_list'>
         </form>
-        <div id='mailName'></div>
-        <div id='mailSubject'></div>
-        <div id='mailSentTime'></div>
-        <div id='mailSize'></div>
-
     </div>
     <section>
         <div class="bottomText">
@@ -61,60 +60,4 @@
         </div>
     </section>
 </body>
-<script type="text/javascript">
-    let obj = "{{mail_list}}";
-    let string = obj.replace(/&quot;/g, '"');
-    const mail_list = JSON.parse(string);
-    let showList = [...mail_list];
-    let filterStatus = {
-        read: 'both', // both, read, unread
-        mark: 'both', // both, mark, unmark
-        fromDate: new Date().getTime() / 1000,
-        toDate: new Date().getTime() / 1000,
-    }
-
-    const isRead = document.getElementById('isRead');
-    const isMark = document.getElementById('isMark');
-    const fromDate = document.getElementById('from_date');
-    const toDate = document.getElementById('to_date');
-    const updateShowList = () => {
-        let toReturn = [...mail_list];
-        if (filterStatus.read !== 'both') {
-            toReturn = toReturn.filter(mail => mail.read === filterStatus.read);
-        }
-        if (filterStatus.mark !== 'both') {
-            toReturn = toReturn.filter(mail => mail.mark === filterStatus.mark);
-        }
-            toReturn = toReturn.filter(mail => mail.sentTime > filterStatus.fromDate && mail.sentTime < filterStatus.toDate);
-        showList = toReturn
-    }
-
-    isRead.addEventListener('change', ({ target: { value } }) => {
-        filterStatus = { ...filterStatus, read: value }; 
-        updateShowList();
-    });
-    isMark.addEventListener('change', ({ target: { value } }) => {
-        filterStatus = { ...filterStatus, mark: value };
-        updateShowList();
-    });
-    fromDate.addEventListener('change', ({ target: { value } }) => {
-        filterStatus = { ...filterStatus, fromDate: new Date(value).getTime() / 1000};
-        updateShowList();
-    });
-    toDate.addEventListener('change', ({target: {value}}) => {
-        filterStatus = { ...filterStatus, toDate: new Date(value).getTime() / 1000};
-        updateShowList();
-    });
-    // showList.forEach(function(item){
-    //     document.getElementById('mailName').innerHTML=item.size;
-    //     })
-
-
-
-        document.getElementById('mailSubject').innerHTML=showList;
-    //     document.getElementById('mailSize').innerHTML=mailSize;
-    //     document.getElementById('mailSentTime').innerHTML=mailSentTime;
-
-
-</script>
 </html>

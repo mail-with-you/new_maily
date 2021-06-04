@@ -1,10 +1,13 @@
-test = [1, 2, 3, 4, 5]
+import time
+from datetime import datetime
+
+from_date = '2020-10-10'
+to_date = '2020-12-12'
 
 
-for i in range(len(test)):
-    print(test[i])
+from_date = time.mktime(datetime.strptime(
+    from_date, '%Y-%m-%d').timetuple()) / 100
+to_date = time.mktime(datetime.strptime(to_date, '%Y-%m-%d').timetuple())
 
-print('-----------------')
-
-for i in test:
-    print(i)
+print(from_date)
+print(type(from_date))

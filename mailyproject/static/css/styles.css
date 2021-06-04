@@ -2,6 +2,7 @@
 * {
   margin: 0px;
   padding: 0px;
+  color: #191919;
 }
 body {
   width: 375px;
@@ -20,6 +21,9 @@ body {
   text-align: center;
   padding-bottom: 50px;
   font-size: 12px;
+  margin-top: 100px;
+}
+.bottomText h3 {
   color: #dbdbdb;
 }
 /* home */
@@ -116,10 +120,10 @@ header p {
 
 hr {
   border: solid 1px #ededed;
-  margin: 50px 36px;
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 .bottomText {
-  margin-top: 100px;
 }
 
 /* ---------------------------------------------------------------- */
@@ -153,10 +157,13 @@ hr {
 /* report------------------------------------------------*/
 
 .resultImg .cupImg {
-  width: 129px;
-  height: auto;
+  width: 100px;
   margin-top: 55.3px;
   margin-bottom: 20px;
+}
+
+.resultImgBox {
+  height: 200px;
 }
 .resultImg h3 {
   font-size: 14px;
@@ -165,17 +172,24 @@ hr {
 .resultImg h3 span {
   font-weight: bold;
 }
-.summaryContents,
 .summaryNumber {
   color: #191919;
 }
 .summary {
   margin-top: 32px;
   margin-left: 24px;
+  margin-bottom: 30px;
 }
 .summaryBindingBox {
   display: flex;
   justify-content: space-around;
+}
+.summaryBindingBox ul li {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+.summaryBindingBox ul {
+  margin-top: 25px;
 }
 .summary h3 {
   font-size: 16px;
@@ -209,19 +223,49 @@ hr {
   color: #ffffff;
   font-size: 16px;
   margin-bottom: 42px;
+  margin-top: 30px;
+  cursor: pointer;
 }
+
 .most {
   margin-left: 24px;
 }
 
 .mostContents {
-  border: 0px solid #ffffff;
-  background-color: #f8f8f8;
   width: 327px;
-  height: 60px;
+  padding: 0;
 }
 .mostContents h3 {
-  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.mostList {
+  margin: 15px 0;
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+}
+.mostList .rank {
+  width: 15%;
+  font-size: 20px;
+}
+.mostList div:nth-child(2) {
+  width: 50%;
+  font-size: 15px;
+}
+.mostList div:nth-child(3) {
+  width: 20%;
+}
+.capa {
+  font-size: 14px;
+}
+.carbon {
+  font-size: 11px;
+  color: #999999;
+}
+
+.mostContents hr {
+  margin: 0 10px;
 }
 
 /* result ---------------------------------------------------*/
@@ -236,12 +280,12 @@ hr {
 .resultImg .line {
   margin-top: 2px;
   border: 0.5px solid #ededed;
-  margin-left: 12px;
-  margin-right: 12px;
+  margin-left: 32px;
+  margin-right: 32px;
 }
 .resultImg .userName {
   margin-top: 15px;
-  text-align: end;
+  text-align: center;
   margin-right: 12px;
 }
 .resultImg .certificationText {
@@ -258,11 +302,13 @@ hr {
 }
 .resultImg .logoImg {
   width: 48.45px;
+  margin-top: 15px;
 }
 .resultText {
   height: 102.5px;
 }
 .resultImg .resultDate {
+  padding-top: 20px;
 }
 .reject {
   display: flex;
@@ -336,11 +382,13 @@ hr {
   margin-top: 2px;
   margin-left: 24px;
   width: 327px;
+  margin-bottom: 30px;
 }
 
 .deleteText h3 {
   font-size: 12px;
   font-weight: normal;
+  margin-bottom: 30px;
 }
 #delete .btnDelete {
   margin-top: 12px;
@@ -354,6 +402,9 @@ hr {
   flex-direction: column;
   justify-content: center;
 }
+.summaryVisualize p {
+  font-size: 12px;
+}
 
 .summaryBar {
   display: flex;
@@ -364,4 +415,54 @@ hr {
 
 .verticalBar {
   width: 5px;
+}
+
+.deleteSelect {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ededed;
+  padding: 15px;
+}
+
+.deleteTopside {
+  font-size: 13px;
+  overflow: hidden;
+}
+.dlelteBottomside {
+  font-size: 11px;
+  color: #999999;
+  overflow: hidden;
+}
+
+#mailChart {
+  margin-left: 15px;
+}
+
+.deleteSorting {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.deleteSorting .btnDelete {
+  margin-left: 0px;
+}
+
+.deleteSorting select {
+  margin-bottom: 20px;
+}
+
+.frame {
+  width: 310px;
+  position: relative;
+  bottom: 205px;
+}
+
+.certificationText .badge {
+  width: 65px;
+  position: relative;
+  left: 100px;
+  bottom: 45px;
 }
