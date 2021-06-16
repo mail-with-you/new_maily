@@ -1,10 +1,8 @@
-from logging import error
 from django.shortcuts import redirect, render
 import requests
 import pyperclip
 import time
 from datetime import datetime
-from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import chromedriver_autoinstaller
@@ -28,7 +26,7 @@ def report(request):
     pw = request.GET['pw']
 
     options = webdriver.ChromeOptions()
-    #options.add_argument('headless')
+    options.add_argument('headless')
     options.add_argument("disable-gpu")
 
     path = chromedriver_autoinstaller.install()
@@ -44,14 +42,14 @@ def report(request):
     user_id = id
     user_pw = pw
     pyperclip.copy(user_id)
-    naver_id.send_keys(Keys.CONTROL, 'v')
+    naver_id.send_keys(Keys.COMMAND, 'v')
     driver.implicitly_wait(5)
 
     naver_pw = driver.find_element_by_name('pw')
     naver_pw.clear()
     naver_pw.click()
     pyperclip.copy(user_pw)
-    naver_pw.send_keys(Keys.CONTROL, 'v')
+    naver_pw.send_keys(Keys.COMMAND, 'v')
     driver.implicitly_wait(5)
 
     # 로그인 버튼 누르기
@@ -177,6 +175,8 @@ def report(request):
                              0.0000030517819446 * 0.447755118655106, 4)
         readCount = totalCount - unreadCount
         unreadPersent = round(unreadCount/totalCount * 100, 2)
+
+        expression = 'test2'
 
         mail_size = round(mail_size * 0.0000030517819446 *
                           0.447755118655106, 0)
@@ -362,7 +362,8 @@ def confirm(request):
             i['sentTime']).strftime('%Y. %m. %d')
     mail_size = round(mail_size * 0.0000030517819446 *
                       0.447755118655106, 2)
-    return render(request, 'confirm.html', {'mail_size': mail_size, 'mail_list': mail_list, 'id': id, 'cookie': cookie})
+    return render(request, 'confirm.html', {'mail_size': mail_size, 'mail_list': mail_list, 'id': id})
+
 
 def result(request):
     mailSN = request.GET.getlist('mailSN')
@@ -375,7 +376,7 @@ def result(request):
     for i in mailSN:
         delete = delete+i+';'
 
-    # 휴지통으로 보내기
+    # # 휴지통으로 보내기
     headers = {
         'authority': 'mail.naver.com',
         'referer': 'https://mail.naver.com/',
