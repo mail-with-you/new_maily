@@ -1,1 +1,1 @@
-web: gunicorn --chdir mailyproject mailyproject.wsgi --log-file -
+web: gunicorn mailyproject.wsgi
